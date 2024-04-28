@@ -34,6 +34,7 @@ async function run() {
     await client.connect();
 
     const craftCollection = client.db('craftDB').collection('crafts')
+    const categoriesCollection = client.db('categoriesDB').collection('categories')
 
     app.post('/crafts',async(req,res)=>{
         const newItem = req.body;
@@ -90,6 +91,14 @@ async function run() {
       const id = req.params.id
       const query = {_id: new ObjectId(id)}
       const result = await craftCollection.deleteOne(query);
+      res.send(result)
+    })
+
+
+    //home section
+    app.get('/categories',async(req,res)=>{
+      const cursor = categoriesCollection.find();
+      const result = await cursor.toArray();
       res.send(result)
     })
     
