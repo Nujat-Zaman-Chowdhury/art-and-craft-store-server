@@ -53,12 +53,46 @@ async function run() {
         res.send(result)
     })
 
+    app.get('/crafts/:email/:id',async(req,res)=>{
+      const id = req.params.id;
+      // const email = req.params.email
+      const result = await craftCollection.findOne({_id: new ObjectId(id)})
+      res.send(result)
+
+    })
+
+    app.put('/crafts/:email/:id',async(req,res)=>{
+      const id = req.params.id;
+      const email= req.params.email;
+      const filter = {_id: new ObjectId(id),email: email}
+      const options = {upsert:true}
+      const updatedCraft = req.body;
+      const craft = {
+        $set:{
+           
+            image:updatedCraft.image,
+            itemName:updatedCraft.itemName,
+            subcategory:updatedCraft.subcategory,
+            shortDescription:updatedCraft.shortDescription,
+            price:updatedCraft.price,
+            rating:updatedCraft.rating,
+            customization:updatedCraft.customization,
+            processingTime:updatedCraft.processingTime,
+            stockStatus:updatedCraft.stockStatus
+        
+      }
+    }
+    const result = await craftCollection.updateOne(filter,craft,options);
+    res.send(result)
+    })
+
     app.delete('/crafts/:email/:id',async(req,res)=>{
       const id = req.params.id
       const query = {_id: new ObjectId(id)}
       const result = await craftCollection.deleteOne(query);
       res.send(result)
     })
+    
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
