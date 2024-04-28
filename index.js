@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 5000;
@@ -51,6 +51,13 @@ async function run() {
         const email = req.params.email;
         const result = await craftCollection.find({email: email}).toArray();
         res.send(result)
+    })
+
+    app.delete('/crafts/:email/:id',async(req,res)=>{
+      const id = req.params.id
+      const query = {_id: new ObjectId(id)}
+      const result = await craftCollection.deleteOne(query);
+      res.send(result)
     })
 
     // Send a ping to confirm a successful connection
