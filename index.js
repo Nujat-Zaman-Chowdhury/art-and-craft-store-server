@@ -50,7 +50,7 @@ async function run() {
 
 
     //view details page
-    app.get('/crafts/:id',async(req,res)=>{
+    app.get('/crafts/viewDetails/:id',async(req,res)=>{
       const id = req.params.id;
       const result = await craftCollection.findOne({_id: new ObjectId(id)});
       res.send(result)
@@ -64,7 +64,12 @@ async function run() {
         res.send(result)
     })
 
-    
+    //get subcategories
+    app.get('/crafts/:subcategory',async(req,res)=>{
+      const subcategory = req.params.subcategory;
+      const result = await craftCollection.find({subcategory:subcategory}).toArray();
+      res.send(result)
+    })
 
     app.get('/crafts/:email/:id',async(req,res)=>{
       const id = req.params.id;
