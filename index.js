@@ -48,28 +48,17 @@ async function run() {
         res.send(result)
     })
 
+        //get subcategory wise data 
+        app.get('/crafts/subcategory/:subcategory',async(req,res)=>{
+          const subcategory = req.params.subcategory;
+          // console.log(subcategory);
+          const result = await craftCollection.find({subcategory: subcategory}).toArray();
+          res.send(result)
+        })
 
-    //view details page
-    app.get('/crafts/viewDetails/:id',async(req,res)=>{
-      const id = req.params.id;
-      const result = await craftCollection.findOne({_id: new ObjectId(id)});
-      res.send(result)
-    })
 
 
 
-    app.get('/crafts/:email',async(req,res)=>{
-        const email = req.params.email;
-        const result = await craftCollection.find({email: email}).toArray();
-        res.send(result)
-    })
-
-    //get subcategories
-    app.get('/crafts/:subcategory',async(req,res)=>{
-      const subcategory = req.params.subcategory;
-      const result = await craftCollection.find({subcategory:subcategory}).toArray();
-      res.send(result)
-    })
 
     app.get('/crafts/:email/:id',async(req,res)=>{
       const id = req.params.id;
@@ -79,6 +68,12 @@ async function run() {
 
     })
 
+    
+    app.get('/crafts/:email',async(req,res)=>{
+      const email = req.params.email;
+      const result = await craftCollection.find({email: email}).toArray();
+      res.send(result)
+  })
     app.put('/crafts/:email/:id',async(req,res)=>{
       const id = req.params.id;
       const email= req.params.email;
@@ -104,6 +99,9 @@ async function run() {
     res.send(result)
     })
 
+
+    
+
     app.delete('/crafts/:email/:id',async(req,res)=>{
       const id = req.params.id
       const query = {_id: new ObjectId(id)}
@@ -112,13 +110,27 @@ async function run() {
     })
 
 
+
+
+
     //home section
     app.get('/categories',async(req,res)=>{
       const cursor = categoriesCollection.find();
       const result = await cursor.toArray();
       res.send(result)
     })
+
     
+    //view details page
+    app.get('/crafts/viewDetails/:id',async(req,res)=>{
+      const id = req.params.id;
+      const result = await craftCollection.findOne({_id: new ObjectId(id)});
+      res.send(result)
+    })
+
+
+
+
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
