@@ -7,14 +7,12 @@ const port = process.env.PORT || 5000;
 
 
 //middleware
-app.use(cors())
+app.use(cors(
+  {
+    origin:["http://localhost:5173","https://art-and-craft-4592e.web.app"]
+}
+))
 app.use(express.json())
-
-
-//craft-store
-//XsHm0dNF1RSuBQJ1
-
-
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.9ecoeol.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
@@ -31,7 +29,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
 
     const craftCollection = client.db('craftDB').collection('crafts')
     const categoriesCollection = client.db('categoriesDB').collection('categories')
@@ -74,10 +72,10 @@ async function run() {
       const result = await craftCollection.find({email: email}).toArray();
       res.send(result)
   })
-    app.put('/crafts/:email/:id',async(req,res)=>{
+    app.put('/crafts/:id',async(req,res)=>{
       const id = req.params.id;
-      const email= req.params.email;
-      const filter = {_id: new ObjectId(id),email: email}
+    
+      const filter = {_id: new ObjectId(id)}
       const options = {upsert:true}
       const updatedCraft = req.body;
       const craft = {
@@ -109,10 +107,6 @@ async function run() {
       res.send(result)
     })
 
-
-
-
-
     //home section
     app.get('/categories',async(req,res)=>{
       const cursor = categoriesCollection.find();
@@ -133,8 +127,7 @@ async function run() {
 
 
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
